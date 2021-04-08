@@ -5,47 +5,47 @@ router.get('/', async (req, res) => {
     try {
         const userData = await User.findAll({
             attributes: { exclude: ['password'] }
-        }).then(userDBData => res.json(userDBData))
+        }).then(userData => res.json(userData))
 
     } catch (err) {
         res.status(500).json(err)
     };
 });
 
-router.get('/:id', async (req, res) => {
-    try {
-        const userData = await User.findOne({
-            attributes: { exclude: ['passowrd'] },
-            where: {
-                id: req.params.id
-            },
-            include: [{
-                model: Post,
-                attributes: ['id', 'title', 'content', 'created_at'],
-            },
-            {
-                model: Comment,
-                attributes: ['id', 'comment_text', 'created_at'],
-                include: {
-                    model: Post,
-                    attributes: ['title']
-                }
-            },
-            {
-                model: Post,
-                attributes: ['title']
-            }
-            ]
-        }).then(userDBData => {
-            if (!userDBData) {
-                res.status(400).json({ message: 'No user found matching this id' });
-            }
-            res.status(userDBData);
-        })
-    } catch (err) {
-        res.status(500).json(err)
-    };
-});
+// router.get('/:id', async (req, res) => {
+//     try {
+//         const userData = await User.findOne({
+//             attributes: { exclude: ['password'] },
+//             where: {
+//                 id: req.params.id
+//             },
+//             include: [{
+//                 model: Post,
+//                 attributes: ['id', 'title', 'content', 'created_at'],
+//             },
+//             {
+//                 model: Comment,
+//                 attributes: ['id', 'comment_text', 'created_at'],
+//                 include: {
+//                     model: Post,
+//                     attributes: ['title']
+//                 }
+//             },
+//             {
+//                 model: Post,
+//                 attributes: ['title']
+//             }
+//             ]
+//         }).then(userData => {
+//             if (!userData) {
+//                 res.status(400).json({ message: 'No user found matching this id' });
+//             }
+//             res.status(userData);
+//         })
+//     } catch (err) {
+//         res.status(500).json(err)
+//     };
+// });
 
 router.post('/', async (req, res) => {
     try {
@@ -53,13 +53,13 @@ router.post('/', async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password
-        }).then(userDBData => {
+        }).then(userCreate => {
             req.session.save(() => {
-                req.session.user_id = userDBData.id,
-                    req.session.name = userDBData.name,
+                req.session.user_id = userCreate.id,
+                    req.session.name = userCreate.name,
                     req.session.loggedIn = true;
 
-                res.json(userDBData)
+                res.json(userCreate)
             });
         })
     } catch (err) {
@@ -69,33 +69,35 @@ router.post('/', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const userLogin = await User.findOne({
-            where: {
-                username: req.body.name
-            }
-        }).then(userDBData => {
-            if (!userDBData) {
-                res.status(400).json({ message: 'no user found matching this id' });
-                return;
-            }
-            const validPassword = userDBData.checkpassword(req.body.password);
-
-            if (!validPassword) {
-                res.status(400).json({ message: 'incorrect password or username!' });
-                return;
-            }
-            req.session.save(() => {
-                req.session.user_id = userDBData.id;
-                req.session.name = userDBData.name;
-                req.session.loggedIn = true;
-
-                res.json({ user: userDBData, message: 'you are now logged in!' });
-            });
-        })
+      const userData = await User.findOne({ where: { email: req.body.email } });
+  
+      if (!userData) {
+        res
+          .status(400)
+          .json({ message: 'Incorrect email or password, please try again' });
+        return;
+      }
+  
+      const validPassword = await userData.checkPassword(req.body.password);
+  
+      if (!validPassword) {
+        res
+          .status(400)
+          .json({ message: 'Incorrect email or password, please try again' });
+        return;
+      }
+  
+      req.session.save(() => {
+        req.session.user_id = userData.id;
+        req.session.logged_in = true;
+  
+        res.json({ user: userData, message: 'You are now logged in!' });
+      });
+  
     } catch (err) {
-        res.status(500).json(err)
-    };
-});
+      res.status(400).json(err);
+    }
+  });
 
 router.post('/logout', (req, res) => {
     if (req.session.loggedIn) {
@@ -115,12 +117,12 @@ router.put('/:id', async (req, res) => {
             where: {
                 id: req.params.id
             }
-        }).then(userDBData => {
-            if (!userDBData[0]) {
+        }).then(userUpdate => {
+            if (!userUpdate[0]) {
                 res.status(404).json({ message: 'no user found matching this id' });
                 return;
             }
-            res.json(userDBData)
+            res.json(userUpdate)
         })
     } catch (err) {
         res.status(500).json(err)
@@ -133,12 +135,12 @@ router.delete('/:id', async (req, res) => {
             where: {
                 id: req.params.id
             }
-        }).then(userDBData =>{
-            if (!userDBData) {
+        }).then(userDelete =>{
+            if (!userDelete) {
                 res.status(404).json({message: 'no user found matching this id'});
                 return;
             }
-            res.json(userDBData);
+            res.json(userDelete);
         })
     } catch (err) {
         res.status(500).json(err)
