@@ -11,12 +11,12 @@ router.get('/', async (req, res) => {
                 attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
                 include: {
                     model: User,
-                    attributes: ['username'],
+                    attributes: ['name'],
                 },
             },
             {
                 model: User,
-                attributes: ['username']
+                attributes: ['name']
 
             },
             ]
@@ -38,7 +38,7 @@ router.get('/login', (req, res) => {
 });
 
 router.get('/signup', (req, res) => {
-    res.render('signup');
+    res.render('sign-up');
 });
 
 router.get('/post/:id', async (req, res) => {
@@ -54,12 +54,12 @@ router.get('/post/:id', async (req, res) => {
                 attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
                 include: {
                     model: User,
-                    attributes: ['username']
+                    attributes: ['name']
                 },
             },
             {
                 model: User,
-                attributes: ['username']
+                attributes: ['name']
 
             },
 
@@ -92,12 +92,12 @@ router.get('/post-comments', async (req, res) => {
                 attributes: ['id', 'comment-text', 'post_id', 'user_id', 'created_at'],
                 include: {
                     model: User,
-                    attributes: ['username'],
+                    attributes: ['name'],
                 }
             },
             {
                 model: User,
-                attributes: ['username'],
+                attributes: ['name'],
             }
             ]
         }).then(postDBData => {
