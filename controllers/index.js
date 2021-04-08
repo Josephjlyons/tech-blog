@@ -8,7 +8,7 @@ router.use('/', homeRoutes);
 router.use('/dashboard', dashboardRoutes)
 
 router.use((req, res) => {
-    res.send('<h1>Route Not Found</h1>')
+    res.status(404).end();
 });
 
 module.exports = router;
