@@ -1,26 +1,23 @@
-async function loginFormHandler(event) {
-    event.preventDefault();
-  
-    const username = document.querySelector('#username-login').value.trim();
-    const password = document.querySelector('#password-login').value.trim();
-  
-    if (username && password) {
-      const response = await fetch('/api/users/login', {
-        method: 'post',
-        body: JSON.stringify({
-          username,
-          password
-        }),
-        headers: { 'Content-Type': 'application/json' }
+
+const loginFormHandler =  (event) => {
+  event.preventDefault();
+  try {
+    const name = document.querySelector('#username-login').value.trim();
+    const email = document.querySelector('#email-login').value.trim();
+    const password = document.querySelector('#password-login').value.trim(); 
+    if (name && email && password) {
+      // Send a POST request to the API endpoint
+      $.post('/api/user/login', { name, email, password })
+      .then((response) => {
+        console.log(response)
+        document.location.replace('/dashboard');  
       });
-  
-      if (response.ok) {
-        document.location.replace('/dashboard');
-      } else {
-        alert(response.statusText);
-      }
     }
+  } catch {
+    alert("Incorrect email or password. Try again.")
   }
+ 
+};
   
 
-document.querySelector('#login-form').addEventListener('submit', loginFormHandler);
+$('.login-form').on('submit', loginFormHandler);
