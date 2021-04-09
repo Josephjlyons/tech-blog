@@ -1,0 +1,17 @@
+html, body {
+  background-color:cyan;
+}
+
+
+.card {
+  margin: 0 0 20px 0;
+  border: 2px solid;
+
+}
+
+.card-header {
+  color: var(--primary);
+  background-color: gray;
+  padding: 1%;
+ 
+}
