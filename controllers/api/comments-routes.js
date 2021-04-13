@@ -12,53 +12,55 @@ router.get('/', async (req, res) => {
     };
 });
 
-router.get('/:id', async (req, res) => {
-    try {
-        const commentId = await Comment.findAll({
-            where: {
-                id: req.params.id
-            }
-        }).then(commentDBData => res.json(commentDBData))
-    } catch (err) {
-        res.status(500).json(err)
-    };
-});
+// router.get('/:id', async (req, res) => {
+//     try {
+//         const commentId = await Comment.findAll({
+//             where: {
+//                 id: req.params.id
+//             }
+//         }).then(commentDBData => res.json(commentDBData))
+//     } catch (err) {
+//         res.status(500).json(err)
+//     };
+// });
 
-router.post('/:id', withAuth, async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
     if (req.session)
 
         try {
             const commentId = await Comment.create({
                 comment_text: req.body.comment_text,
                 post_id: req.body.post_id,
-                user_id: req.body.user_id
-            }).then(commentDBData => res.json(commentDBData))
+                user_id: req.session.user_id
+           
+            }).then(commentId => res.json(commentId))
         } catch (err) {
+            console.log(err)
             res.status(500).json(err)
         };
 });
 
-router.put('/:id', withAuth, async (req, res) => {
-    try {
-        const commentId = await Comment.update({
-            comment_text: req.body.comment_text,
-        },
-            {
-                where: {
-                    id: req.params.id,
-                }
-            }
-        ).then(commentDBData => {
-            if (!commentDBData) {
-                res.status(404).json({ message: 'no comment found matching this id' });
-                return;
-            }
-            res.json(commentDBData);
-        })
-    } catch (err) {
-        res.status(500).json(err)
-    };
-});
+// router.put('/:id', withAuth, async (req, res) => {
+//     try {
+//         const commentId = await Comment.update({
+//             comment_text: req.body.comment_text,
+//         },
+//             {
+//                 where: {
+//                     id: req.params.id,
+//                 }
+//             }
+//         ).then(commentDBData => {
+//             if (!commentDBData) {
+//                 res.status(404).json({ message: 'no comment found matching this id' });
+//                 return;
+//             }
+//             res.json(commentDBData);
+//         })
+//     } catch (err) {
+//         res.status(500).json(err)
+//     };
+// });
 
 router.delete('/:id', withAuth, async (req, res) => {
     try {
