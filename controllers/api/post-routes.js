@@ -52,8 +52,8 @@ router.post('/:id', async (req, res) => {
             }
             ]
 
-        }).then(postDBData => {
-            if (!postDBData) {
+        }).then(postId => {
+            if (!postId) {
                 res.status(404).json({ message: 'no post found matching this id' });
             }
             res.json(postDBData)
@@ -65,12 +65,17 @@ router.post('/:id', async (req, res) => {
 
 router.post('/', withAuth, async (req, res) => {
     try {
-        const post = await Post.create({
+        const postData = await Post.create({
             title: req.body.title,
             content: req.body.content,
-            user_id: req.session.user_id
-        }).then(postDBData => res.json(postDBData))
+            user_id: req.session.user_id,
+
+            
+        }).then(postData => res.json(postData))
+        res.json(200).json(postData)
+        console.log(postData)
     } catch (err) {
+        console.log(err)
         res.status(500).json(err)
     };
 });
