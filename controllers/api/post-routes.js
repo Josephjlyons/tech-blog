@@ -72,8 +72,7 @@ router.post('/', withAuth, async (req, res) => {
 
             
         }).then(postData => res.json(postData))
-        res.json(200).json(postData)
-        console.log(postData)
+
     } catch (err) {
         console.log(err)
         res.status(500).json(err)
