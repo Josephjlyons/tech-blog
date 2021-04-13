@@ -1,19 +1,19 @@
 {{> post-info post}}
 
 {{#if loggedIn}}
-<div class="card">
-    <h3 class="card-title"></h3>
-    <form class="card-body comment-form" id="comment-form">
 
-        <label class="form-label">Comment</label>
-        <input id="comment" name="comment-body" class="form-input" />
-
-        <button type="submit" class="btn">Submit</button>
-    </form>
-</div>
 {{/if}}
 
 {{> comments post.comments}}
+<div>
+    <form class="comment-form">
+    <div>
+        <textarea name="comment-body" id="comment_text" cols="50" rows="10"></textarea>
+    </div>
+ <button type="submit" class="comment-btn btn">Comment</button>
+ </form>
+</div>
+ <script src="/js/comment.js"></script>
 
 {{#if loggedIn}}
 <script src="./js/comment.js"></script>
