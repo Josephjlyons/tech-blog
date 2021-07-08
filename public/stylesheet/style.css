@@ -51,11 +51,12 @@ a:hover{
 }
 
 .login-form{
+  color: white;
   padding-top: 10px;
   background:red;
   text-align: center;
-  
 }
+
 .nav{
   max-width: 85%;
   margin: 0 auto;
