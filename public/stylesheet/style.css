@@ -48,4 +48,6 @@ a:hover{
   background-color: rgb(255, 0, 0);
   padding: 1%;
  border-radius: 5px;
+ max-width: 85%;
+ margin: 0 auto;
 }
